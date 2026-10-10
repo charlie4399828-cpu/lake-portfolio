@@ -44,19 +44,37 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
           </div>
         </div>
 
-        {/* 底部图片区：1 张全宽；2 张左右并排（竖图友好）；3+ 张一大（bigSide 侧 60%）+ 其余小图堆叠 */}
+        {/* 底部图片区：1 张全宽；2 张左 40% + 右 60%（第 1 张为大图，bigSide 可换侧）；3+ 张一大 + 小图堆叠 */}
         {project.images.length > 0 && (
           <div className="mt-4 flex min-h-0 flex-1 gap-3 md:mt-6">
-            {project.images.length <= 2 ? (
-              project.images.map((src, k) => (
-                <img
-                  key={k}
-                  src={src}
-                  alt={`${project.name} 图 ${k + 1}`}
-                  loading="lazy"
-                  className={`h-full min-w-0 rounded-2xl object-cover ${project.images.length === 2 ? 'w-1/2' : 'w-full'}`}
-                />
-              ))
+            {project.images.length === 1 ? (
+              <img
+                src={project.images[0]}
+                alt={`${project.name} 图 1`}
+                loading="lazy"
+                className="h-full w-full rounded-2xl object-cover"
+              />
+            ) : project.images.length === 2 ? (
+              <>
+                {/* 小图 40%（大图在左时移到右侧） */}
+                <div className={`min-w-0 w-2/5 ${project.bigSide === 'left' ? 'order-2' : ''}`}>
+                  <img
+                    src={project.images[1]}
+                    alt={`${project.name} 图 2`}
+                    loading="lazy"
+                    className="h-full w-full rounded-2xl object-cover"
+                  />
+                </div>
+                {/* 大图 60%（images[0]） */}
+                <div className={`min-w-0 w-3/5 ${project.bigSide === 'left' ? 'order-1' : ''}`}>
+                  <img
+                    src={project.images[0]}
+                    alt={`${project.name} 图 1`}
+                    loading="lazy"
+                    className="h-full w-full rounded-2xl object-cover"
+                  />
+                </div>
+              </>
             ) : (
               <>
                 {/* 小图列（与大图位置相反） */}

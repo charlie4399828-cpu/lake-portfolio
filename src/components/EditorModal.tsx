@@ -367,14 +367,16 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                             images={p.images}
                             onChange={(imgs) => setProject(i, { images: imgs })}
                             hint={
-                              p.images.length <= 2
-                                ? '图片（1 张全宽，2 张左右并排）'
-                                : '图片（第 1 张为大图，其余小图堆叠）'
+                              p.images.length <= 1
+                                ? '图片（1 张全宽）'
+                                : p.images.length === 2
+                                  ? '图片（第 1 张为大图 60%，第 2 张 40%，可切换左右）'
+                                  : '图片（第 1 张为大图，其余小图堆叠）'
                             }
-                            labelFor={(k) => (p.images.length > 2 && k === 0 ? '大图' : `图${k + 1}`)}
+                            labelFor={(k) => (p.images.length >= 2 && k === 0 ? '大图' : `图${k + 1}`)}
                           />
-                          {/* 3+ 张时可选大图位置 */}
-                          {p.images.length >= 3 && (
+                          {/* 2+ 张时可选大图位置 */}
+                          {p.images.length >= 2 && (
                             <div className="mt-2 flex items-center gap-2">
                               <span className="text-xs text-white/50">大图位置</span>
                               {(['right', 'left'] as const).map((side) => (
