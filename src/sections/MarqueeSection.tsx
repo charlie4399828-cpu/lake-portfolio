@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react';
-import { marqueeImages } from '../data/images';
-
-// 第 1 行前 11 张，第 2 行后 10 张；三倍复制实现无缝循环
-const ROW1 = marqueeImages.slice(0, 11);
-const ROW2 = marqueeImages.slice(11, 21);
+import { useContent } from '../context/ContentContext';
 
 export default function MarqueeSection() {
+  const { content } = useContent();
+  const imgs = content.marquee;
+  // 前一半第 1 行向右，后一半第 2 行向左；三倍复制实现无缝循环
+  const half = Math.ceil(imgs.length / 2);
+  const row1 = imgs.slice(0, half);
+  const row2 = imgs.slice(half);
+
   const sectionRef = useRef<HTMLElement>(null);
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
@@ -30,33 +33,26 @@ export default function MarqueeSection() {
     };
   }, []);
 
+  const renderRow = (row: string[], keyPrefix: string, ref: React.RefObject<HTMLDivElement>) =>
+    row.length > 0 && (
+      <div ref={ref} style={{ willChange: 'transform' }} className="flex w-max gap-3">
+        {[...row, ...row, ...row].map((src, i) => (
+          <img
+            key={`${keyPrefix}-${i}`}
+            src={src}
+            alt=""
+            loading="lazy"
+            className="h-[270px] w-[420px] shrink-0 rounded-2xl object-cover"
+          />
+        ))}
+      </div>
+    );
+
   return (
     <section id="marquee" ref={sectionRef} className="overflow-hidden py-6 md:py-10">
       <div className="flex flex-col gap-3">
-        {/* 第一行：向右滚动 */}
-        <div ref={row1Ref} style={{ willChange: 'transform' }} className="flex w-max gap-3">
-          {[...ROW1, ...ROW1, ...ROW1].map((src, i) => (
-            <img
-              key={`row1-${i}`}
-              src={src}
-              alt=""
-              loading="lazy"
-              className="h-[270px] w-[420px] shrink-0 rounded-2xl object-cover"
-            />
-          ))}
-        </div>
-        {/* 第二行：向左滚动 */}
-        <div ref={row2Ref} style={{ willChange: 'transform' }} className="flex w-max gap-3">
-          {[...ROW2, ...ROW2, ...ROW2].map((src, i) => (
-            <img
-              key={`row2-${i}`}
-              src={src}
-              alt=""
-              loading="lazy"
-              className="h-[270px] w-[420px] shrink-0 rounded-2xl object-cover"
-            />
-          ))}
-        </div>
+        {renderRow(row1, 'row1', row1Ref)}
+        {renderRow(row2, 'row2', row2Ref)}
       </div>
     </section>
   );

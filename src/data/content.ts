@@ -3,7 +3,7 @@
  * 默认值在此定义，编辑弹窗修改后写入 localStorage 覆盖。
  */
 
-import { projects as defaultProjects, heroPortrait } from './images';
+import { projects as defaultProjects, heroPortrait, marqueeImages } from './images';
 
 export interface ContactInfo {
   email: string;
@@ -14,7 +14,8 @@ export interface ContactInfo {
 
 export interface ProjectItem {
   name: string;
-  images: string[]; // 第 1 张为大图（右侧 60%），其余为小图（左侧 40% 堆叠）
+  images: string[]; // 1 张全宽；2 张左右并排；3+ 张时第 1 张为大图，其余小图堆叠
+  bigSide?: 'left' | 'right'; // 3+ 张时大图位置，默认 right
   desc: string; // 卡片小字
   detail: string; // 详情页正文
   tags: string[];
@@ -32,6 +33,7 @@ export interface SiteContent {
   contact: ContactInfo;
   hero: { title: string; tagline: string; portrait: string };
   about: { title: string; text: string };
+  marquee: string[]; // 横向滚动图：前一半第一行向右，后一半第二行向左
   projects: ProjectItem[];
   resources: ResourceItem[];
 }
@@ -52,6 +54,7 @@ export const DEFAULT_CONTENT: SiteContent = {
     title: 'About me',
     text: '这里放你的自我介绍啊喂',
   },
+  marquee: marqueeImages,
   projects: defaultProjects.map((p, i) => ({
     name: p.name,
     images: [p.col2, ...p.col1], // 大图在前，小图随后
@@ -108,6 +111,7 @@ export function loadContent(): SiteContent {
         about: { ...DEFAULT_CONTENT.about, ...parsed.about },
         projects,
         resources: Array.isArray(parsed.resources) ? parsed.resources : DEFAULT_CONTENT.resources,
+        marquee: Array.isArray(parsed.marquee) ? parsed.marquee : DEFAULT_CONTENT.marquee,
       };
     }
   } catch {

@@ -71,6 +71,56 @@ function MoveButtons({
   );
 }
 
+/** 图片列表编辑器：增删 + 上下移（项目卡 / Marquee 共用） */
+function ImageListEditor({
+  images,
+  onChange,
+  hint,
+  labelFor,
+}: {
+  images: string[];
+  onChange: (next: string[]) => void;
+  hint: string;
+  labelFor: (k: number) => string;
+}) {
+  const setImg = (k: number, v: string) => onChange(images.map((s, idx) => (idx === k ? v : s)));
+  return (
+    <div>
+      <div className="mb-1 flex items-center justify-between">
+        <span className={labelCls}>{hint}</span>
+        <button
+          onClick={() => onChange([...images, ''])}
+          className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs text-white hover:bg-white/20"
+        >
+          <Plus size={12} /> 添加图片
+        </button>
+      </div>
+      <div className="space-y-2">
+        {images.map((src, k) => (
+          <div key={k} className="flex items-center gap-1.5">
+            <span className="w-8 shrink-0 text-center text-xs text-white/40">{labelFor(k)}</span>
+            <input
+              className={inputCls}
+              value={src}
+              placeholder="图片地址"
+              onChange={(e) => setImg(k, e.target.value)}
+            />
+            <MoveButtons index={k} total={images.length} onMove={(dir) => onChange(moveItem(images, k, dir))} />
+            <button
+              onClick={() => onChange(images.filter((_, idx) => idx !== k))}
+              aria-label="删除图片"
+              className="shrink-0 rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        ))}
+        {images.length === 0 && <p className="text-xs text-white/30">暂无图片，点右上角"添加图片"</p>}
+      </div>
+    </div>
+  );
+}
+
 export default function EditorModal({ open, onClose }: EditorModalProps) {
   const { content, update, reset } = useContent();
   const [draft, setDraft] = useState<SiteContent>(content);
@@ -134,35 +184,7 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
   const moveProject = (i: number, dir: -1 | 1) =>
     setDraft((d) => ({ ...d, projects: moveItem(d.projects, i, dir) }));
 
-  const setProjectImage = (pi: number, ii: number, v: string) =>
-    setDraft((d) => {
-      const projects = d.projects.slice();
-      const images = projects[pi].images.slice();
-      images[ii] = v;
-      projects[pi] = { ...projects[pi], images };
-      return { ...d, projects };
-    });
-
-  const addProjectImage = (pi: number) =>
-    setDraft((d) => {
-      const projects = d.projects.slice();
-      projects[pi] = { ...projects[pi], images: [...projects[pi].images, ''] };
-      return { ...d, projects };
-    });
-
-  const removeProjectImage = (pi: number, ii: number) =>
-    setDraft((d) => {
-      const projects = d.projects.slice();
-      projects[pi] = { ...projects[pi], images: projects[pi].images.filter((_, idx) => idx !== ii) };
-      return { ...d, projects };
-    });
-
-  const moveProjectImage = (pi: number, ii: number, dir: -1 | 1) =>
-    setDraft((d) => {
-      const projects = d.projects.slice();
-      projects[pi] = { ...projects[pi], images: moveItem(projects[pi].images, ii, dir) };
-      return { ...d, projects };
-    });
+  const setMarquee = (v: string[]) => set('marquee', v);
 
   const setResource = (i: number, patch: Partial<SiteContent['resources'][number]>) =>
     setDraft((d) => {
@@ -289,6 +311,21 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                 </div>
               </section>
 
+              {/* Marquee 模块（滚动图片增删 + 调序） */}
+              <section>
+                <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#B600A8]">
+                  Marquee 模块（{draft.marquee.length} 张图）
+                </h3>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  <ImageListEditor
+                    images={draft.marquee}
+                    onChange={setMarquee}
+                    hint={`滚动图片（前 ${Math.ceil(draft.marquee.length / 2)} 张第一行向右，其余第二行向左）`}
+                    labelFor={(k) => `图${k + 1}`}
+                  />
+                </div>
+              </section>
+
               {/* Projects 模块（卡片数量 + 子模块内容） */}
               <section>
                 <div className="mb-3 flex items-center justify-between">
@@ -324,43 +361,37 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                         <div className="sm:col-span-2">
                           <Field label="详情页内容" textarea value={p.detail} onChange={(v) => setProject(i, { detail: v })} />
                         </div>
-                        {/* 图片列表：第 1 张为大图，可增删、可上下调整顺序 */}
+                        {/* 图片列表：1 张全宽 / 2 张并排 / 3+ 张一大 N 小，可增删、上下调序 */}
                         <div className="sm:col-span-2">
-                          <div className="mb-1 flex items-center justify-between">
-                            <span className={labelCls}>图片（第 1 张为右侧大图，其余左侧堆叠）</span>
-                            <button
-                              onClick={() => addProjectImage(i)}
-                              className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs text-white hover:bg-white/20"
-                            >
-                              <Plus size={12} /> 添加图片
-                            </button>
-                          </div>
-                          <div className="space-y-2">
-                            {p.images.map((src, k) => (
-                              <div key={k} className="flex items-center gap-1.5">
-                                <span className="w-8 shrink-0 text-center text-xs text-white/40">
-                                  {k === 0 ? '大图' : `图${k + 1}`}
-                                </span>
-                                <input
-                                  className={inputCls}
-                                  value={src}
-                                  placeholder="图片地址"
-                                  onChange={(e) => setProjectImage(i, k, e.target.value)}
-                                />
-                                <MoveButtons index={k} total={p.images.length} onMove={(dir) => moveProjectImage(i, k, dir)} />
+                          <ImageListEditor
+                            images={p.images}
+                            onChange={(imgs) => setProject(i, { images: imgs })}
+                            hint={
+                              p.images.length <= 2
+                                ? '图片（1 张全宽，2 张左右并排）'
+                                : '图片（第 1 张为大图，其余小图堆叠）'
+                            }
+                            labelFor={(k) => (p.images.length > 2 && k === 0 ? '大图' : `图${k + 1}`)}
+                          />
+                          {/* 3+ 张时可选大图位置 */}
+                          {p.images.length >= 3 && (
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className="text-xs text-white/50">大图位置</span>
+                              {(['right', 'left'] as const).map((side) => (
                                 <button
-                                  onClick={() => removeProjectImage(i, k)}
-                                  aria-label="删除图片"
-                                  className="shrink-0 rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
+                                  key={side}
+                                  onClick={() => setProject(i, { bigSide: side })}
+                                  className={`rounded-md px-2.5 py-1 text-xs transition-colors ${
+                                    (p.bigSide ?? 'right') === side
+                                      ? 'bg-[#B600A8] text-white'
+                                      : 'bg-white/10 text-white/60 hover:bg-white/20'
+                                  }`}
                                 >
-                                  <Trash2 size={14} />
+                                  {side === 'right' ? '右侧' : '左侧'}
                                 </button>
-                              </div>
-                            ))}
-                            {p.images.length === 0 && (
-                              <p className="text-xs text-white/30">暂无图片，点右上角"添加图片"</p>
-                            )}
-                          </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
