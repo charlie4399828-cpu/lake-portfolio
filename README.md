@@ -55,6 +55,13 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 
 ## 变更记录
 
+### 2026-10-10（第 7 轮）
+1. 标题自适应逻辑抽离为纯函数 [fitTitle.ts](src/utils/fitTitle.ts)（`computeFitFontSize` / `fitTitleElement`，字号读取支持注入便于测试）。
+2. 新增 Vitest + jsdom 单元测试 [fitTitle.test.ts](src/utils/fitTitle.test.ts) 共 10 例：不缩放/等宽/比例缩放/极端窄屏/非法输入/长标题收敛/幂等重算/无父元素容错，全部通过。
+3. 部署配置：vite `base: '/lake-portfolio/'`；二维码路径改用 `import.meta.env.BASE_URL` 适配子路径；新增 `npm run test` / `npm run deploy`（gh-pages）。
+4. GitHub 仓库已建：https://github.com/charlie4399828-cpu/lake-portfolio （待代理开启后完成推送与 Pages 部署）。
+5. 已上线 GitHub Pages：**https://charlie4399828-cpu.github.io/lake-portfolio/**（gh-pages 分支，`npm run deploy` 一键更新）。
+
 ### 2026-10-10（第 6 轮）
 1. 修复 H5/PC 两端标题排版不兼容：h1 上残留浏览器检查器写入的内联样式（width:791px、height:140px、rotate(360deg) 等），导致 PC 端文字偏左裁切、手机端偏右裁切——已全部移除。
 2. 标题新增自适应收缩保护（`titleRef` + fit 函数）：任何视口宽度、任何标题长度下文字超出容器时自动按比例缩小字号，杜绝再次溢出；resize 时重新计算。
