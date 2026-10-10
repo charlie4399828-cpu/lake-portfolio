@@ -44,16 +44,35 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
           </div>
         </div>
 
-        {/* 底部双栏图片网格：左 40% 两张堆叠图，右 60% 一张高图 */}
-        <div className="mt-4 flex min-h-0 flex-1 gap-3 md:mt-6">
-          <div className="grid w-2/5 grid-rows-2 gap-3">
-            <img src={project.col1[0]} alt={`${project.name} 图 1`} loading="lazy" className="h-full w-full rounded-2xl object-cover" />
-            <img src={project.col1[1]} alt={`${project.name} 图 2`} loading="lazy" className="h-full w-full rounded-2xl object-cover" />
+        {/* 底部双栏图片区：一大（右 60%）+ 其余小图（左 40% 堆叠），支持任意数量 */}
+        {project.images.length > 0 && (
+          <div className="mt-4 flex min-h-0 flex-1 gap-3 md:mt-6">
+            {project.images.length > 1 && (
+              <div
+                className="grid w-2/5 gap-3"
+                style={{ gridTemplateRows: `repeat(${project.images.length - 1}, minmax(0, 1fr))` }}
+              >
+                {project.images.slice(1).map((src, k) => (
+                  <img
+                    key={k}
+                    src={src}
+                    alt={`${project.name} 图 ${k + 2}`}
+                    loading="lazy"
+                    className="h-full w-full rounded-2xl object-cover"
+                  />
+                ))}
+              </div>
+            )}
+            <div className={project.images.length > 1 ? 'w-3/5' : 'w-full'}>
+              <img
+                src={project.images[0]}
+                alt={`${project.name} 主图`}
+                loading="lazy"
+                className="h-full w-full rounded-2xl object-cover"
+              />
+            </div>
           </div>
-          <div className="w-3/5">
-            <img src={project.col2} alt={`${project.name} 主图`} loading="lazy" className="h-full w-full rounded-2xl object-cover" />
-          </div>
-        </div>
+        )}
       </motion.div>
     </div>
   );

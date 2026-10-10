@@ -3,7 +3,7 @@
  * 默认值在此定义，编辑弹窗修改后写入 localStorage 覆盖。
  */
 
-import { projects as defaultProjects, type Project } from './images';
+import { projects as defaultProjects, heroPortrait } from './images';
 
 export interface ContactInfo {
   email: string;
@@ -12,7 +12,9 @@ export interface ContactInfo {
   qr: string;
 }
 
-export interface ProjectItem extends Project {
+export interface ProjectItem {
+  name: string;
+  images: string[]; // 第 1 张为大图（右侧 60%），其余为小图（左侧 40% 堆叠）
   desc: string; // 卡片小字
   detail: string; // 详情页正文
   tags: string[];
@@ -28,7 +30,7 @@ export interface ResourceItem {
 
 export interface SiteContent {
   contact: ContactInfo;
-  hero: { title: string; tagline: string };
+  hero: { title: string; tagline: string; portrait: string };
   about: { title: string; text: string };
   projects: ProjectItem[];
   resources: ResourceItem[];
@@ -44,13 +46,15 @@ export const DEFAULT_CONTENT: SiteContent = {
   hero: {
     title: '莱克的小屋',
     tagline: 'Lake © 2026 — Portfolio',
+    portrait: heroPortrait,
   },
   about: {
     title: 'About me',
     text: '这里放你的自我介绍啊喂',
   },
   projects: defaultProjects.map((p, i) => ({
-    ...p,
+    name: p.name,
+    images: [p.col2, ...p.col1], // 大图在前，小图随后
     desc:
       i === 0
         ? '记录湖畔的灵感与日常，一个安静的写作角落。'
@@ -80,9 +84,31 @@ export function loadContent(): SiteContent {
   try {
     const raw = localStorage.getItem(KEY);
     if (raw) {
-      const parsed = JSON.parse(raw) as SiteContent;
-      // 保证关键字段存在（版本兼容）
-      return { ...DEFAULT_CONTENT, ...parsed };
+      const parsed = JSON.parse(raw) as Partial<SiteContent>;
+      // 旧版本迁移：projects[].col1/col2 → images[]
+      const projects = Array.isArray(parsed.projects)
+        ? parsed.projects.map((p) => {
+            const legacy = p as unknown as { col1?: string[]; col2?: string; images?: string[] };
+            if (Array.isArray(legacy.images)) return p;
+            const images = [legacy.col2, ...(legacy.col1 ?? [])].filter(
+              (s): s is string => typeof s === 'string' && s.length > 0,
+            );
+            const rest = { ...(p as object) } as Record<string, unknown>;
+            delete rest.col1;
+            delete rest.col2;
+            return { ...rest, images } as unknown as ProjectItem;
+          })
+        : DEFAULT_CONTENT.projects;
+      // 逐模块深合并，保证新增字段（如 hero.portrait）有默认值
+      return {
+        ...DEFAULT_CONTENT,
+        ...parsed,
+        contact: { ...DEFAULT_CONTENT.contact, ...parsed.contact },
+        hero: { ...DEFAULT_CONTENT.hero, ...parsed.hero },
+        about: { ...DEFAULT_CONTENT.about, ...parsed.about },
+        projects,
+        resources: Array.isArray(parsed.resources) ? parsed.resources : DEFAULT_CONTENT.resources,
+      };
     }
   } catch {
     /* 忽略损坏数据 */

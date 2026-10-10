@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole } from 'lucide-react';
+import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole, ArrowUp, ArrowDown } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import type { SiteContent } from '../data/content';
 
@@ -38,6 +38,38 @@ function Field({
 }
 
 const EDIT_PASSWORD = '763560';
+
+/** 通用数组元素上移/下移 */
+function moveItem<T>(arr: T[], i: number, dir: -1 | 1): T[] {
+  const j = i + dir;
+  if (j < 0 || j >= arr.length) return arr;
+  const next = arr.slice();
+  [next[i], next[j]] = [next[j], next[i]];
+  return next;
+}
+
+/** 上移/下移按钮组（端点禁用） */
+function MoveButtons({
+  index,
+  total,
+  onMove,
+}: {
+  index: number;
+  total: number;
+  onMove: (dir: -1 | 1) => void;
+}) {
+  const btn = 'rounded-md p-1.5 text-white/50 hover:bg-white/10 hover:text-white disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-white/50';
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      <button onClick={() => onMove(-1)} disabled={index === 0} aria-label="上移" className={btn}>
+        <ArrowUp size={15} />
+      </button>
+      <button onClick={() => onMove(1)} disabled={index === total - 1} aria-label="下移" className={btn}>
+        <ArrowDown size={15} />
+      </button>
+    </span>
+  );
+}
 
 export default function EditorModal({ open, onClose }: EditorModalProps) {
   const { content, update, reset } = useContent();
@@ -88,8 +120,7 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
         ...d.projects,
         {
           name: `新项目 ${d.projects.length + 1}`,
-          col1: [d.projects[0]?.col1[0] ?? '', d.projects[0]?.col1[1] ?? ''],
-          col2: d.projects[0]?.col2 ?? '',
+          images: d.projects[0] ? [...d.projects[0].images] : [],
           desc: '项目简介',
           detail: '项目详情',
           tags: ['React'],
@@ -99,6 +130,39 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
 
   const removeProject = (i: number) =>
     setDraft((d) => ({ ...d, projects: d.projects.filter((_, idx) => idx !== i) }));
+
+  const moveProject = (i: number, dir: -1 | 1) =>
+    setDraft((d) => ({ ...d, projects: moveItem(d.projects, i, dir) }));
+
+  const setProjectImage = (pi: number, ii: number, v: string) =>
+    setDraft((d) => {
+      const projects = d.projects.slice();
+      const images = projects[pi].images.slice();
+      images[ii] = v;
+      projects[pi] = { ...projects[pi], images };
+      return { ...d, projects };
+    });
+
+  const addProjectImage = (pi: number) =>
+    setDraft((d) => {
+      const projects = d.projects.slice();
+      projects[pi] = { ...projects[pi], images: [...projects[pi].images, ''] };
+      return { ...d, projects };
+    });
+
+  const removeProjectImage = (pi: number, ii: number) =>
+    setDraft((d) => {
+      const projects = d.projects.slice();
+      projects[pi] = { ...projects[pi], images: projects[pi].images.filter((_, idx) => idx !== ii) };
+      return { ...d, projects };
+    });
+
+  const moveProjectImage = (pi: number, ii: number, dir: -1 | 1) =>
+    setDraft((d) => {
+      const projects = d.projects.slice();
+      projects[pi] = { ...projects[pi], images: moveItem(projects[pi].images, ii, dir) };
+      return { ...d, projects };
+    });
 
   const setResource = (i: number, patch: Partial<SiteContent['resources'][number]>) =>
     setDraft((d) => {
@@ -124,6 +188,9 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
 
   const removeResource = (i: number) =>
     setDraft((d) => ({ ...d, resources: d.resources.filter((_, idx) => idx !== i) }));
+
+  const moveResource = (i: number, dir: -1 | 1) =>
+    setDraft((d) => ({ ...d, resources: moveItem(d.resources, i, dir) }));
 
   const save = () => {
     update(draft);
@@ -207,6 +274,9 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Field label="大标题" value={draft.hero.title} onChange={(v) => set('hero', { ...draft.hero, title: v })} />
                   <Field label="左下角小字" value={draft.hero.tagline} onChange={(v) => set('hero', { ...draft.hero, tagline: v })} />
+                  <div className="sm:col-span-2">
+                    <Field label="人像图片" value={draft.hero.portrait} onChange={(v) => set('hero', { ...draft.hero, portrait: v })} />
+                  </div>
                 </div>
               </section>
 
@@ -237,13 +307,16 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                     <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                       <div className="mb-3 flex items-center justify-between">
                         <span className="hero-heading text-lg font-extrabold">{String(i + 1).padStart(2, '0')}</span>
-                        <button
-                          onClick={() => removeProject(i)}
-                          aria-label="删除卡片"
-                          className="rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
-                        >
-                          <Trash2 size={15} />
-                        </button>
+                        <span className="flex items-center gap-1">
+                          <MoveButtons index={i} total={draft.projects.length} onMove={(dir) => moveProject(i, dir)} />
+                          <button
+                            onClick={() => removeProject(i)}
+                            aria-label="删除卡片"
+                            className="rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </span>
                       </div>
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <Field label="项目名" value={p.name} onChange={(v) => setProject(i, { name: v })} />
@@ -251,10 +324,43 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                         <div className="sm:col-span-2">
                           <Field label="详情页内容" textarea value={p.detail} onChange={(v) => setProject(i, { detail: v })} />
                         </div>
-                        <Field label="左图1" value={p.col1[0]} onChange={(v) => setProject(i, { col1: [v, p.col1[1]] })} />
-                        <Field label="左图2" value={p.col1[1]} onChange={(v) => setProject(i, { col1: [p.col1[0], v] })} />
+                        {/* 图片列表：第 1 张为大图，可增删、可上下调整顺序 */}
                         <div className="sm:col-span-2">
-                          <Field label="右侧高图" value={p.col2} onChange={(v) => setProject(i, { col2: v })} />
+                          <div className="mb-1 flex items-center justify-between">
+                            <span className={labelCls}>图片（第 1 张为右侧大图，其余左侧堆叠）</span>
+                            <button
+                              onClick={() => addProjectImage(i)}
+                              className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-1 text-xs text-white hover:bg-white/20"
+                            >
+                              <Plus size={12} /> 添加图片
+                            </button>
+                          </div>
+                          <div className="space-y-2">
+                            {p.images.map((src, k) => (
+                              <div key={k} className="flex items-center gap-1.5">
+                                <span className="w-8 shrink-0 text-center text-xs text-white/40">
+                                  {k === 0 ? '大图' : `图${k + 1}`}
+                                </span>
+                                <input
+                                  className={inputCls}
+                                  value={src}
+                                  placeholder="图片地址"
+                                  onChange={(e) => setProjectImage(i, k, e.target.value)}
+                                />
+                                <MoveButtons index={k} total={p.images.length} onMove={(dir) => moveProjectImage(i, k, dir)} />
+                                <button
+                                  onClick={() => removeProjectImage(i, k)}
+                                  aria-label="删除图片"
+                                  className="shrink-0 rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            ))}
+                            {p.images.length === 0 && (
+                              <p className="text-xs text-white/30">暂无图片，点右上角"添加图片"</p>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -280,13 +386,16 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                     <div key={i} className="rounded-2xl border border-white/10 bg-white/5 p-4">
                       <div className="mb-3 flex items-center justify-between">
                         <span className="hero-heading text-lg font-extrabold">{String(i + 1).padStart(2, '0')}</span>
-                        <button
-                          onClick={() => removeResource(i)}
-                          aria-label="删除卡片"
-                          className="rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
-                        >
-                          <Trash2 size={15} />
-                        </button>
+                        <span className="flex items-center gap-1">
+                          <MoveButtons index={i} total={draft.resources.length} onMove={(dir) => moveResource(i, dir)} />
+                          <button
+                            onClick={() => removeResource(i)}
+                            aria-label="删除卡片"
+                            className="rounded-md p-1.5 text-white/50 hover:bg-red-500/20 hover:text-red-400"
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        </span>
                       </div>
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <Field label="资源名" value={r.name} onChange={(v) => setResource(i, { name: v })} />

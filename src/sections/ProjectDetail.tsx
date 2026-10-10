@@ -45,10 +45,12 @@ export default function ProjectDetail({ project, index, onBack }: ProjectDetailP
         ))}
       </div>
 
-      {/* 主图 */}
-      <div className="mt-8 overflow-hidden rounded-3xl border-2 border-[#D7E2EA]/40">
-        <img src={project.col2} alt={`${project.name} 主图`} className="h-[50vh] w-full object-cover md:h-[60vh]" />
-      </div>
+      {/* 主图（第 1 张） */}
+      {project.images.length > 0 && (
+        <div className="mt-8 overflow-hidden rounded-3xl border-2 border-[#D7E2EA]/40">
+          <img src={project.images[0]} alt={`${project.name} 主图`} className="h-[50vh] w-full object-cover md:h-[60vh]" />
+        </div>
+      )}
 
       {/* 详情正文 */}
       <div className="mt-8 rounded-3xl border border-white/10 bg-white/5 p-6 md:p-10">
@@ -59,11 +61,14 @@ export default function ProjectDetail({ project, index, onBack }: ProjectDetailP
         ))}
       </div>
 
-      {/* 附赠两张细节图 */}
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <img src={project.col1[0]} alt="细节 1" className="h-56 w-full rounded-2xl object-cover md:h-72" />
-        <img src={project.col1[1]} alt="细节 2" className="h-56 w-full rounded-2xl object-cover md:h-72" />
-      </div>
+      {/* 其余细节图 */}
+      {project.images.length > 1 && (
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {project.images.slice(1).map((src, k) => (
+            <img key={k} src={src} alt={`细节 ${k + 1}`} className="h-56 w-full rounded-2xl object-cover md:h-72" />
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import ContactButton from '../components/ContactButton';
 import EditorModal from '../components/EditorModal';
 import FadeIn from '../components/FadeIn';
-import { heroPortrait } from '../data/images';
 import { useContent } from '../context/ContentContext';
 import { fitTitleElement } from '../utils/fitTitle';
 
@@ -74,7 +73,7 @@ export default function LakeSection() {
         </div>
         <FadeIn delay={0.6} y={30} className="mt-5 md:mt-7">
           <img
-            src={heroPortrait}
+            src={content.hero.portrait}
             alt="Lake 人像"
             loading="lazy"
             className="h-32 w-24 rounded-2xl object-cover sm:h-44 sm:w-32 md:h-56 md:w-40 lg:h-64 lg:w-48"
