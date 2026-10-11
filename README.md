@@ -49,6 +49,13 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 
 ## 变更记录
 
+### 2026-10-11（第 13 轮 · 一键发布修复）
+1. 问题：第 12 轮的「发布内容」在浏览器里只能**下载** content.json 到下载目录，不会写回项目，导致 `npm run deploy` 部署的仍是旧文件，访客看不到修改。
+2. 修复：[vite.config.ts](vite.config.ts) 新增 dev-only 中间件 `POST /__api/publish`，直接把 JSON 写入 `public/content.json`（仅本地 dev server 存在，不进生产包）。
+3. 编辑弹窗「发布内容」在本地开发环境一键直写项目文件（有"发布中…"状态）；线上环境才降级为下载并提示手动放回。
+4. 实测：POST 标记内容 → 文件内容变为标记 → gen:content 还原，闭环通过；10 单测 + 构建通过。
+5. **正确发布姿势**：在本地 `http://localhost:5173/lake-portfolio/` 编辑（不要在线上站编辑）→ 保存 → 发布内容（直写 public/content.json）→ `npm run deploy`。若之前是在线上站编辑的，草稿在该域 localStorage，需在该页发布得到下载文件后放回项目 public/。
+
 ### 2026-10-11（第 12 轮 · 内容发布机制）
 1. **访客自动看到已编辑内容**：新增 `public/content.json` 作为随站点部署的已发布内容。加载优先级：本机 localStorage 草稿（仅少爷本机预览）→ content.json（所有访客）→ 代码默认值。ContentProvider 启动时无草稿即 fetch（`cache: no-cache`）。
 2. 编辑弹窗底部按钮调整：「导出」→「**发布内容**」（生成固定名 content.json；Chrome/Edge 走 File System Access API 可直接覆盖项目 public/，其他浏览器降级下载）；「恢复默认」→「**清除本机修改**」（清草稿后回显线上发布内容）；「导入」保留为本机备份恢复。
