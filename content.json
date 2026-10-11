@@ -1,34 +1,36 @@
 {
   "contact": {
-    "email": "charliepenn21@foxmail.com",
-    "phone": "+86 13108675662",
-    "wechat": "carlll615",
-    "qr": "/lake-portfolio/wechat-qr.svg"
+    "email": "hello@lake.studio",
+    "phone": "+86 138-0000-0000",
+    "wechat": "lake-studio",
+    "qr": "/wechat-qr.svg"
   },
   "hero": {
     "title": "莱克的小屋",
     "tagline": "Lake © 2026 — Portfolio",
-    "portrait": "https://i.ibb.co/C5chTVRv/image.png"
+    "portrait": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20studio%20portrait%20of%20a%20young%20creative%20developer%20wearing%20a%20dark%20hoodie%2C%20dramatic%20purple%20and%20magenta%20rim%20lighting%2C%20dark%20background%2C%20moody&image_size=portrait_4_3"
   },
   "about": {
     "title": "About me",
-    "text": "一位怀揣理想的 00 后，有点i，但做事绝不马虎。在工业自动化写过三年软件，把测试覆盖率从 70% 拉到 95%、工具故障率砍了 40%；自己独立跑通 Temu 全托管店铺，最高日单 700+，女士双肩包干到小类 Top 3。现在扎进 AI，研究 RAG 和 Agent 怎么真正落地到业务里。希望和同样认真做事的你，擦出不一样的火花。\n"
+    "text": "这里放你的自我介绍啊喂"
   },
   "marquee": [
-    "https://i.ibb.co/1fWZ5gXX/14555a33110411711eed6029fdbb2d7.jpg",
-    "https://i.ibb.co/Hf28jHY9/e7f27262d3e3a0f55f2e43d46f2472e.jpg",
-    "https://i.ibb.co/JWk54P26/87df3c6eed71ef642689decf1276398.jpg",
-    "https://i.ibb.co/FLw96TPC/88edfa384713cc5eb00cdfdbfaff59d.jpg",
-    "https://i.ibb.co/gLD05JZL/200be81623cd4bd4d31fd201cdaf783.jpg",
-    "https://i.ibb.co/Ckvy4Wv/5e4363e05a0aadd0c1b3ae8a1152cf6.jpg",
-    "https://i.ibb.co/QvQ32Q4g/29d00483253adc403b2044611967703.jpg",
-    "https://i.ibb.co/bM49cXPg/a152d0211084cfab8fbbb9fcfa6d060.jpg",
-    "https://i.ibb.co/zH6RV8S6/c73351923630830009e677ffe17058d.jpg",
-    "https://i.ibb.co/1trkk2mN/f28d7d6210f1c7b47d00f1e49def572.jpg",
-    "https://i.ibb.co/1tfJTkkL/310ecc215372be00e39f5b427b291af.jpg",
-    "https://i.ibb.co/mCtj2J5Q/c73971766f78508e4be6a4b4cf0da52.jpg",
-    "https://i.ibb.co/qM8DQPxh/f147880a3f15ab72f6683a61c8dca76.jpg",
-    "https://i.ibb.co/3Y4krcp4/0ed220fa99991b552a2ff5cc065c228.jpg",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20moody%20mountain%20lake%20at%20night%20with%20fog%2C%20cinematic%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20dark%203D%20fluid%20render%20with%20purple%20and%20magenta%20neon%20glow&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cyberpunk%20alley%20at%20night%2C%20rain%2C%20neon%20reflections%2C%20dark%20tones&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=misty%20pine%20forest%20at%20dusk%2C%20dark%20cinematic%20landscape&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20dark%20glass%20sculpture%20with%20teal%20rim%20light%2C%20studio%203D%20render&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=starry%20night%20sky%20reflected%20on%20a%20calm%20dark%20lake%2C%20long%20exposure&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20brutalist%20concrete%20architecture%20in%20fog%2C%20moody%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=liquid%20metal%20waves%20on%20black%20background%2C%20blue%20highlights%2C%203D%20render&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=lighthouse%20at%20night%20in%20a%20storm%2C%20dark%20cinematic%20seascape&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=macro%20shot%20of%20dark%20water%20ripples%2C%20deep%20blue%20and%20black&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=aurora%20borealis%20over%20a%20dark%20lake%2C%20night%20landscape%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=purple%20smoke%20on%20black%20background%2C%20dramatic%20studio%20lighting&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20cabin%20by%20a%20lake%20at%20night%2C%20warm%20window%20light%2C%20dark%20forest&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20minimal%20topographic%20lines%20artwork%2C%20subtle%20grey%20gradient&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=full%20moon%20over%20a%20calm%20dark%20ocean%2C%20minimal%20cinematic%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=floating%20geometric%20shapes%2C%20magenta%20and%20cyan%20neon%20on%20dark%20background%2C%203D%20render&image_size=landscape_4_3",
     "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=rowboat%20on%20a%20still%20dark%20lake%20at%20dawn%2C%20mist%2C%20cinematic&image_size=landscape_4_3",
     "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=silver%20smoke%20trails%20on%20black%20background%2C%20high%20contrast%20abstract&image_size=landscape_4_3",
     "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=night%20waterfall%20long%20exposure%20among%20dark%20rocks%2C%20cinematic&image_size=landscape_4_3",
@@ -37,74 +39,73 @@
   ],
   "projects": [
     {
-      "name": "设备的自动化",
-      "desc": "把设备从不相干的零部件调到 \"稳跑\"",
-      "detail": "我毕业后的第一份正式工作，在博众精工做软件工程师，公司做的是工业自动化设备，客户是消费电子、新能源、半导体那些大厂。说白了就是 —— 客户要一台机器替工人干活，我负责把这台机器的软件写明白、调稳当。\n技术栈是 C#，实现上位机与 PLC 通信、和下位机的运动控制，自动化工作流这些核心流程。",
+      "name": "湖畔博客",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=developer%20workspace%20at%20night%20by%20a%20window%2C%20dark%20room%2C%20screen%20glow%2C%20cinematic&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20desk%20setup%20with%20laptop%20showing%20a%20blog%2C%20purple%20ambient%20light%2C%20moody&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=coffee%20cup%20and%20notebook%20on%20dark%20wooden%20desk%2C%20moody%20cinematic%20light&image_size=landscape_4_3"
+      ],
+      "desc": "记录湖畔的灵感与日常，一个安静的写作角落。",
+      "detail": "湖畔博客 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
       "tags": [
         "React",
         "TypeScript",
         "TailwindCSS"
-      ],
-      "images": [
-        "https://i.ibb.co/C5chTVRv/image.png",
-        "https://i.ibb.co/C5chTVRv/image.png"
-      ],
-      "bigSide": "left"
+      ]
     },
     {
-      "name": "Temu 跨境全托管",
-      "desc": "一个人跑通全托跨境链路",
-      "detail": "运营着多个店铺，主打女士箱包和个护百货。从选品、做 Listing、补货计划到售后退货率分析。\n跑起来之后日常稳定在 600 单 / 天，会员日和黑五能冲到 700 单。我会结合RPA用 Excel 把每个 SKU 的表现拉出来看，集中资源打爆品。综合利润率稳在 20%–30%，退货率压在 4% 以内",
+      "name": "涟漪仪表盘",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20dark%20office%20desk%20with%20a%20wide%20monitor%20showing%20a%20dashboard%2C%20night&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20analytics%20dashboard%20UI%20on%20a%20monitor%2C%20purple%20accents%2C%20modern&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=close-up%20of%20dark%20UI%20charts%20and%20graphs%20glowing%20on%20a%20screen&image_size=landscape_4_3"
+      ],
+      "desc": "涟漪仪表盘 项目简介。",
+      "detail": "涟漪仪表盘 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
       "tags": [
         "React",
         "TypeScript",
         "TailwindCSS"
-      ],
-      "images": [
-        "https://i.ibb.co/C5chTVRv/image.png",
-        "https://i.ibb.co/C5chTVRv/image.png",
-        "https://i.ibb.co/C5chTVRv/image.png"
-      ],
-      "bigSide": "right"
+      ]
     },
     {
-      "name": "RPA・桌面自动化机器人",
-      "desc": "用机器人替代运营80%重复的事",
-      "detail": "通过捕获元素和模拟人工减少重复工作，批量的抓取网页内容写表格日报",
-      "tags": [
-        "React",
-        "TypeScript",
-        "TailwindCSS"
-      ],
+      "name": "深水摄影",
       "images": [
         "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20underwater%20cave%20with%20faint%20blue%20light%20rays%2C%20cinematic&image_size=portrait_16_9",
         "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=underwater%20dark%20blue%20scene%20with%20light%20rays%20from%20the%20surface&image_size=landscape_4_3",
         "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=silhouette%20of%20a%20diver%20in%20deep%20dark%20water%2C%20cinematic&image_size=landscape_4_3"
       ],
-      "bigSide": "right"
+      "desc": "深水摄影 项目简介。",
+      "detail": "深水摄影 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
+      "tags": [
+        "React",
+        "TypeScript",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "name": "湖屋商店",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=wooden%20shelf%20with%20handmade%20goods%20in%20a%20dark%20cozy%20store%2C%20warm%20light&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20minimal%20product%20shot%20of%20a%20ceramic%20mug%2C%20purple%20backlight&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20dark%20interior%20of%20a%20lakeside%20cabin%20shop%2C%20warm%20lamps&image_size=landscape_4_3"
+      ],
+      "desc": "湖屋商店 项目简介。",
+      "detail": "湖屋商店 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
+      "tags": [
+        "React",
+        "TypeScript",
+        "TailwindCSS"
+      ]
     }
   ],
   "resources": [
     {
-      "name": "云南·茶礼",
-      "category": "资源",
-      "desc": "家里做了二十来年茶叶，从日常口粮茶到送人的礼盒装都能安排。",
+      "name": "前端开发",
+      "category": "技能",
+      "desc": "React / Vue / TypeScript，从设计稿到上线全流程。",
       "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20web%20development%20workspace%2C%20laptop%20with%20glowing%20code%20editor%2C%20dark%20ambient%20room%2C%20blue%20and%20purple%20neon%20accents%2C%20cinematic%20lighting%2C%20photorealistic&image_size=landscape_4_3",
       "link": "https://github.com"
-    },
-    {
-      "name": "RPA自动化AI机器人",
-      "category": "技能",
-      "desc": "Excel 批量处理、跨系统录单、 定时抓数据、自动出报表——重复的活儿交给脚本，人去做该做的事。",
-      "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20web%20development%20workspace%2C%20laptop%20with%20glowing%20code%20editor%2C%20dark%20ambient%20room%2C%20blue%20and%20purple%20neon%20accents%2C%20cinematic%20lighting%2C%20photorealistic&image_size=landscape_4_3",
-      "link": "https://"
-    },
-    {
-      "name": "PS · 修图做图",
-      "category": "技能",
-      "desc": "不管是电商主图、详情页、产品精修、海报配图都OK",
-      "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20web%20development%20workspace%2C%20laptop%20with%20glowing%20code%20editor%2C%20dark%20ambient%20room%2C%20blue%20and%20purple%20neon%20accents%2C%20cinematic%20lighting%2C%20photorealistic&image_size=landscape_4_3",
-      "link": "https://"
     }
   ]
 }
