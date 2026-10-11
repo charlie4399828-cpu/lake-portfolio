@@ -81,48 +81,97 @@ export const DEFAULT_CONTENT: SiteContent = {
   ],
 };
 
-const KEY = 'lake-portfolio-content-v1';
+export const STORAGE_KEY = 'lake-portfolio-content-v1';
+
+/** 本地资源路径自动补 BASE_URL（http/data 原样），保证 GitHub Pages 子路径下图片可用（幂等） */
+function fixAssetPath(p: string): string {
+  if (!p || /^https?:\/\//.test(p) || p.startsWith('data:') || p.startsWith('blob:')) return p;
+  const base = import.meta.env.BASE_URL;
+  if (p.startsWith(base)) return p; // 已带 base，避免重复拼接
+  return base + p.replace(/^\/+/, '');
+}
+
+/** 合并默认值 + 旧版迁移 + 图片路径修正（localStorage 草稿与线上 content.json 共用） */
+function normalizeContent(parsed: Partial<SiteContent>): SiteContent {
+  // 旧版本迁移：projects[].col1/col2 → images[]
+  const projects = Array.isArray(parsed.projects)
+    ? parsed.projects.map((p) => {
+        const legacy = p as unknown as { col1?: string[]; col2?: string; images?: string[] };
+        let item: ProjectItem;
+        if (Array.isArray(legacy.images)) {
+          item = p;
+        } else {
+          const images = [legacy.col2, ...(legacy.col1 ?? [])].filter(
+            (s): s is string => typeof s === 'string' && s.length > 0,
+          );
+          const rest = { ...(p as object) } as Record<string, unknown>;
+          delete rest.col1;
+          delete rest.col2;
+          item = { ...rest, images } as unknown as ProjectItem;
+        }
+        return {
+          ...item,
+          images: item.images.map(fixAssetPath),
+          bigSide: (item.bigSide === 'left' ? 'left' : 'right') as 'left' | 'right',
+        };
+      })
+    : DEFAULT_CONTENT.projects;
+
+  return {
+    ...DEFAULT_CONTENT,
+    ...parsed,
+    contact: {
+      ...DEFAULT_CONTENT.contact,
+      ...parsed.contact,
+      qr: fixAssetPath(parsed.contact?.qr ?? DEFAULT_CONTENT.contact.qr),
+    },
+    hero: {
+      ...DEFAULT_CONTENT.hero,
+      ...parsed.hero,
+      portrait: fixAssetPath(parsed.hero?.portrait ?? DEFAULT_CONTENT.hero.portrait),
+    },
+    about: { ...DEFAULT_CONTENT.about, ...parsed.about },
+    projects,
+    resources: (Array.isArray(parsed.resources) ? parsed.resources : DEFAULT_CONTENT.resources).map((r) => ({
+      ...r,
+      image: fixAssetPath(r.image),
+    })),
+    marquee: (Array.isArray(parsed.marquee) ? parsed.marquee : DEFAULT_CONTENT.marquee).map(fixAssetPath),
+  };
+}
+
+export function hasLocalDraft(): boolean {
+  try {
+    return !!localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return false;
+  }
+}
 
 export function loadContent(): SiteContent {
   try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Partial<SiteContent>;
-      // 旧版本迁移：projects[].col1/col2 → images[]
-      const projects = Array.isArray(parsed.projects)
-        ? parsed.projects.map((p) => {
-            const legacy = p as unknown as { col1?: string[]; col2?: string; images?: string[] };
-            if (Array.isArray(legacy.images)) return p;
-            const images = [legacy.col2, ...(legacy.col1 ?? [])].filter(
-              (s): s is string => typeof s === 'string' && s.length > 0,
-            );
-            const rest = { ...(p as object) } as Record<string, unknown>;
-            delete rest.col1;
-            delete rest.col2;
-            return { ...rest, images } as unknown as ProjectItem;
-          })
-        : DEFAULT_CONTENT.projects;
-      // 逐模块深合并，保证新增字段（如 hero.portrait）有默认值
-      return {
-        ...DEFAULT_CONTENT,
-        ...parsed,
-        contact: { ...DEFAULT_CONTENT.contact, ...parsed.contact },
-        hero: { ...DEFAULT_CONTENT.hero, ...parsed.hero },
-        about: { ...DEFAULT_CONTENT.about, ...parsed.about },
-        projects,
-        resources: Array.isArray(parsed.resources) ? parsed.resources : DEFAULT_CONTENT.resources,
-        marquee: Array.isArray(parsed.marquee) ? parsed.marquee : DEFAULT_CONTENT.marquee,
-      };
-    }
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return normalizeContent(JSON.parse(raw) as Partial<SiteContent>);
   } catch {
     /* 忽略损坏数据 */
   }
   return DEFAULT_CONTENT;
 }
 
+/** 拉取随站点部署的"已发布内容"（public/content.json），所有访客共享 */
+export async function fetchPublishedContent(): Promise<SiteContent | null> {
+  try {
+    const res = await fetch(`${import.meta.env.BASE_URL}content.json`, { cache: 'no-cache' });
+    if (!res.ok) return null;
+    return normalizeContent((await res.json()) as Partial<SiteContent>);
+  } catch {
+    return null;
+  }
+}
+
 export function saveContent(content: SiteContent) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(content));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(content));
   } catch {
     /* 存储失败忽略 */
   }
@@ -130,7 +179,7 @@ export function saveContent(content: SiteContent) {
 
 export function resetContent() {
   try {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(STORAGE_KEY);
   } catch {
     /* ignore */
   }

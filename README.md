@@ -34,9 +34,11 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 
 | 文件 | 说明 |
 |---|---|
-| `src/data/content.ts` | 可编辑内容数据源（localStorage 持久化，key: `lake-portfolio-content-v1`） |
+| `src/data/content.ts` | 内容数据源：本机草稿（localStorage）+ 线上发布（public/content.json）三级加载 |
+| `public/content.json` | **已发布内容**，随站点部署，所有访客自动拉取（编辑弹窗「发布内容」生成） |
+| `scripts/gen-content.mjs` | 从代码默认值生成 content.json（`npm run gen:content`） |
 | `src/data/images.ts` | 图片资源（当前为 AI 生成占位图，可替换） |
-| `src/context/ContentContext.tsx` | 内容 Context（load/save/reset） |
+| `src/context/ContentContext.tsx` | 内容 Context（草稿优先 / 访客拉发布 / reset 回线上） |
 | `src/components/ContactButton.tsx` | 渐变药丸按钮 → 打开联系弹窗 |
 | `src/components/ContactModal.tsx` | 联系方式弹窗（邮箱/电话/微信号/二维码 + 复制） |
 | `src/components/EditorModal.tsx` | 内容编辑弹窗（密码保护） |
@@ -46,6 +48,14 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 | `public/wechat-qr.svg` | 微信二维码占位图（少爷请替换为真实二维码） |
 
 ## 变更记录
+
+### 2026-10-11（第 12 轮 · 内容发布机制）
+1. **访客自动看到已编辑内容**：新增 `public/content.json` 作为随站点部署的已发布内容。加载优先级：本机 localStorage 草稿（仅少爷本机预览）→ content.json（所有访客）→ 代码默认值。ContentProvider 启动时无草稿即 fetch（`cache: no-cache`）。
+2. 编辑弹窗底部按钮调整：「导出」→「**发布内容**」（生成固定名 content.json；Chrome/Edge 走 File System Access API 可直接覆盖项目 public/，其他浏览器降级下载）；「恢复默认」→「**清除本机修改**」（清草稿后回显线上发布内容）；「导入」保留为本机备份恢复。
+3. `normalizeContent` 统一处理：默认值深合并、旧版 col1/col2 迁移、本地图片路径自动补 BASE_URL（幂等，GitHub Pages 子路径下 `/xxx.png` → `/lake-portfolio/xxx.png`，外链原样）。
+4. 新增 `npm run gen:content`（esbuild 从 DEFAULT_CONTENT 生成初始 content.json）。
+5. **发布工作流**：编辑保存（本机看效果）→ 点「发布内容」存 content.json → 覆盖 `public/content.json` → `npm run deploy`，全网访客生效。
+6. 验证：10 单测 + 构建通过；浏览器实测清草稿后访客自动 fetch content.json（4 项目/1 资源/63 滚动图正常渲染）、发布按钮就位。
 
 ### 2026-10-11（第 11 轮）
 1. 新增全局图片放大 [Lightbox.tsx](src/components/Lightbox.tsx)：任意带 `data-zoomable` 的 `<img>` 点击后全屏放大（捕获阶段监听 + stopPropagation，不与卡片跳转/链接冲突；Esc / 点遮罩 / X 关闭）。已挂载：人像、项目卡所有图、详情页主图+细节图、资源配图（Marquee 因拖拽冲突不加）。

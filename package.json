@@ -8,6 +8,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "gen:content": "node scripts/gen-content.mjs",
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {

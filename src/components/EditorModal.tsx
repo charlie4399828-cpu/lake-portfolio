@@ -247,17 +247,43 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
     onClose();
   };
 
-  // 导出 / 导入配置 JSON（跨浏览器迁移内容）
+  // 发布：把当前内容存为 content.json（线上已发布内容，访客共享）。
+  // Chrome/Edge 支持 File System Access API，可直接选项目 public/content.json 覆盖；否则降级为下载。
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const exportJson = () => {
-    const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' });
+  const PUBLISH_TIP =
+    '保存为 content.json 后，覆盖项目里的 public/content.json 并重新部署（npm run deploy），所有访客即可看到新内容。';
+
+  const publishJson = async () => {
+    const json = JSON.stringify(draft, null, 2);
+    const w = window as unknown as {
+      showSaveFilePicker?: (opts: unknown) => Promise<{
+        createWritable: () => Promise<{ write: (s: string) => Promise<void>; close: () => Promise<void> }>;
+      }>;
+    };
+    if (w.showSaveFilePicker) {
+      try {
+        const handle = await w.showSaveFilePicker({
+          suggestedName: 'content.json',
+          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(json);
+        await writable.close();
+        alert('已保存到 content.json。\n\n' + PUBLISH_TIP);
+        return;
+      } catch {
+        /* 用户取消或失败 → 走下载兜底 */
+      }
+    }
+    const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'lake-content.json';
+    a.download = 'content.json';
     a.click();
     URL.revokeObjectURL(url);
+    setTimeout(() => alert('content.json 已下载。\n\n' + PUBLISH_TIP), 300);
   };
 
   const importJson = (f: File) => {
@@ -505,17 +531,19 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                   onClick={() => { reset(); onClose(); }}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
                 >
-                  <RotateCcw size={15} /> 恢复默认
+                  <RotateCcw size={15} /> 清除本机修改
                 </button>
-                {/* 导出/导入配置：解决换浏览器 localStorage 为空的问题 */}
+                {/* 发布/导入：发布的 content.json 随站点部署，所有访客可见 */}
                 <button
-                  onClick={exportJson}
+                  onClick={publishJson}
+                  title={PUBLISH_TIP}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
                 >
-                  <Download size={15} /> 导出
+                  <Download size={15} /> 发布内容
                 </button>
                 <button
                   onClick={() => fileRef.current?.click()}
+                  title="从备份 JSON 恢复到本机草稿"
                   className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
                 >
                   <Upload size={15} /> 导入
