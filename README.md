@@ -52,6 +52,13 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 
 ## 变更记录
 
+### 2026-10-11（第 15 轮 · 修复保存跳密码框 / 移除发布内容 / 补云端单测）
+1. **修复「保存并发布」后跳回密码验证框**：根因是编辑弹窗重置状态的 `useEffect` 依赖了 `[open, content]`，点保存时 `update(content)` 立即更新 context，弹窗仍开着触发 effect 把 `authed` 冲回 false。改为仅在弹窗打开边沿 `[open]` 重置。浏览器实测：保存后弹窗直接关闭、`save-lake-site` 返回 200、不再出现密码框。
+2. **移除「发布内容」功能**：云端保存已取代本地写 `content.json` 的旧方案，删除发布按钮 / publishJson / publishing 状态及 [vite.config.ts](vite.config.ts) 中的 `__api/publish` dev 中间件。保留「导入」备份恢复。
+3. 新增云端数据层单测 [src/data/cloud.test.ts](src/data/cloud.test.ts) 10 例：读取解析/时间戳回退/空行/非200/网络异常/Abort、写入请求体/密码401/500兜底。全量 **20/20 通过**，tsc 通过。
+4. 跨域实测：REST 读取 200（4 项目/21 滚动图）、云函数 OPTIONS 预检 `ACAO=*` 且允许 apikey/authorization/content-type。
+5. 云端测试数据已还原为默认内容。
+
 ### 2026-10-11（第 14 轮 · Supabase 云端内容，独立数据库）
 1. 方案对齐 `D:\Code\ChangLong-web`：Supabase 云端存全站 JSON，密码保护的 Edge Function 写入，**任意访客自动加载云端最新内容**，localStorage 仅作缓存。
 2. **新建 Lake 专属独立 Supabase 项目** `Lake_Portfolio`（ref `kmsiybqaxvyptxktsxhr`，新加坡），与昌隆物理隔离；经少爷确认删除了已暂停的旧项目腾出免费名额。数据库密码存于本机 `.env.local`（gitignore）。

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole, ArrowUp, ArrowDown, Download, Upload } from 'lucide-react';
+import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole, ArrowUp, ArrowDown, Upload } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import { DEFAULT_CONTENT, type SiteContent } from '../data/content';
 import { saveCloudContent } from '../data/cloud';
@@ -158,6 +158,9 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
   const [pwdError, setPwdError] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // 仅在弹窗「打开瞬间」重置草稿与鉴权状态。
+  // 注意：不能把 content 放进依赖——保存时 update(content) 会触发此 effect，
+  // 导致弹窗还开着就把 authed 冲回 false（表现为"保存后跳回密码框"）。
   useEffect(() => {
     if (open) {
       setDraft(content);
@@ -165,7 +168,8 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
       setPwd('');
       setPwdError(false);
     }
-  }, [open, content]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   const submitPwd = () => {
     if (pwd === EDIT_PASSWORD) {
@@ -263,71 +267,8 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
     }
   };
 
-  // 发布：把当前内容写为 content.json。
-  // 本地开发环境（localhost dev server）→ 直接 POST 写入项目 public/content.json；
-  // 线上环境无法写服务器 → 降级下载文件（需手动放回项目后部署）。
+  // 导入备份 JSON 到当前草稿
   const fileRef = useRef<HTMLInputElement>(null);
-  const [publishing, setPublishing] = useState(false);
-
-  const publishJson = async () => {
-    const json = JSON.stringify(draft, null, 2);
-
-    // ① 本地 dev：通过 Vite 中间件直写 public/content.json
-    if (import.meta.env.DEV) {
-      setPublishing(true);
-      try {
-        const res = await fetch(`${import.meta.env.BASE_URL}__api/publish`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: json,
-        });
-        if (res.ok) {
-          update(draft); // 同步本机草稿
-          alert(
-            '发布成功：已直接写入项目 public/content.json ✅\n\n' +
-              '最后一步：在终端执行 npm run deploy（或让我部署），所有访客即可看到最新内容。',
-          );
-          return;
-        }
-      } catch {
-        /* 接口不可用时走下面的兜底 */
-      } finally {
-        setPublishing(false);
-      }
-    }
-
-    // ② 兜底：File System Access API 选位置保存，或直接下载
-    const tip =
-      '当前是线上环境，浏览器无法直接写项目文件。请把 content.json 放回项目 public/ 目录覆盖同名文件，再执行 npm run deploy。';
-    const w = window as unknown as {
-      showSaveFilePicker?: (opts: unknown) => Promise<{
-        createWritable: () => Promise<{ write: (s: string) => Promise<void>; close: () => Promise<void> }>;
-      }>;
-    };
-    if (w.showSaveFilePicker) {
-      try {
-        const handle = await w.showSaveFilePicker({
-          suggestedName: 'content.json',
-          types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }],
-        });
-        const writable = await handle.createWritable();
-        await writable.write(json);
-        await writable.close();
-        alert('已保存 content.json。\n\n' + tip);
-        return;
-      } catch {
-        /* 用户取消或失败 → 下载兜底 */
-      }
-    }
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'content.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    setTimeout(() => alert('content.json 已下载。\n\n' + tip), 300);
-  };
 
   const importJson = (f: File) => {
     const reader = new FileReader();
@@ -575,15 +516,6 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                   className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
                 >
                   <RotateCcw size={15} /> 清除本机修改
-                </button>
-                {/* 发布/导入：发布的 content.json 随站点部署，所有访客可见 */}
-                <button
-                  onClick={publishJson}
-                  disabled={publishing}
-                  title="一键写入项目 public/content.json（需在本地开发环境操作），之后部署即对全网生效"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10 disabled:opacity-50"
-                >
-                  <Download size={15} /> {publishing ? '发布中…' : '发布内容'}
                 </button>
                 <button
                   onClick={() => fileRef.current?.click()}
