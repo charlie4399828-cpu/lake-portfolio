@@ -34,8 +34,11 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 
 | 文件 | 说明 |
 |---|---|
-| `src/data/content.ts` | 内容数据源：本机草稿（localStorage）+ 线上发布（public/content.json）三级加载 |
-| `public/content.json` | **已发布内容**，随站点部署，所有访客自动拉取（编辑弹窗「发布内容」生成） |
+| `src/data/cloud.ts` | **Supabase 云端同步**：访客拉云端 JSON / 编辑保存走密码云函数（昌隆同项目独立表） |
+| `supabase/functions/save-lake-site/index.ts` | Edge Function：校验密码后写 lake_content 表 |
+| `supabase/schema-lake.sql` | 建表 SQL（lake_content 单行 JSON，RLS 公开读 / 禁止直接写） |
+| `src/data/content.ts` | 内容数据源：云端 → 本机草稿（按时间戳取新）→ content.json → 默认值 |
+| `public/content.json` | 静态兜底内容（云端不可用时使用） |
 | `scripts/gen-content.mjs` | 从代码默认值生成 content.json（`npm run gen:content`） |
 | `src/data/images.ts` | 图片资源（当前为 AI 生成占位图，可替换） |
 | `src/context/ContentContext.tsx` | 内容 Context（草稿优先 / 访客拉发布 / reset 回线上） |
@@ -48,6 +51,15 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 | `public/wechat-qr.svg` | 微信二维码占位图（少爷请替换为真实二维码） |
 
 ## 变更记录
+
+### 2026-10-11（第 14 轮 · Supabase 云端内容，对齐昌隆方案）
+1. 方案对齐 `D:\Code\ChangLong-web`：Supabase 云端存全站 JSON，密码保护的 Edge Function 写入，**任意访客自动加载云端最新内容**，localStorage 仅作缓存。复用同一 Supabase 项目 `ghyvptwooesjvtwfljfz`，独立表 `lake_content` + 独立函数 `save-lake-site`，与昌隆互不影响。
+2. 新增 [src/data/cloud.ts](src/data/cloud.ts)：REST 公开读（apikey sb_publishable_…）+ POST 云函数保存（密码 763560，由函数端校验）。
+3. ContentContext 加载策略：云端内容 vs 本机草稿按 `_cmsUpdatedAt` 取新；云端不可用 → 静态 `content.json` → 代码默认。
+4. 编辑弹窗主按钮改为「**保存并发布**」：本机立即生效 + 同步云端（同步中状态/失败可重试），成功后所有访客刷新即见，无需部署。
+5. Supabase 资源：`supabase/schema-lake.sql` 建表脚本；`supabase/functions/save-lake-site/` 函数源码（Deno）。
+6. 待办（依赖少爷）：目标 Supabase 项目当前 **INACTIVE（被暂停）**，需在 Dashboard 点 Restore 恢复；恢复后部署函数并在 SQL Editor 执行建表脚本。
+7. tsc + 10 单测通过。
 
 ### 2026-10-11（第 13 轮 · 一键发布修复）
 1. 问题：第 12 轮的「发布内容」在浏览器里只能**下载** content.json 到下载目录，不会写回项目，导致 `npm run deploy` 部署的仍是旧文件，访客看不到修改。

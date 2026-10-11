@@ -36,6 +36,8 @@ export interface SiteContent {
   marquee: string[]; // 横向滚动图：前一半第一行向右，后一半第二行向左
   projects: ProjectItem[];
   resources: ResourceItem[];
+  /** 云端同步时间戳（毫秒），本地缓存与云端内容按它取新 */
+  _cmsUpdatedAt?: number;
 }
 
 export const DEFAULT_CONTENT: SiteContent = {
@@ -91,8 +93,8 @@ function fixAssetPath(p: string): string {
   return base + p.replace(/^\/+/, '');
 }
 
-/** 合并默认值 + 旧版迁移 + 图片路径修正（localStorage 草稿与线上 content.json 共用） */
-function normalizeContent(parsed: Partial<SiteContent>): SiteContent {
+/** 合并默认值 + 旧版迁移 + 图片路径修正（localStorage 草稿、静态 content.json、云端数据共用） */
+export function normalizeContentFromCloud(parsed: Partial<SiteContent>): SiteContent {
   // 旧版本迁移：projects[].col1/col2 → images[]
   const projects = Array.isArray(parsed.projects)
     ? parsed.projects.map((p) => {
@@ -151,7 +153,7 @@ export function hasLocalDraft(): boolean {
 export function loadContent(): SiteContent {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return normalizeContent(JSON.parse(raw) as Partial<SiteContent>);
+    if (raw) return normalizeContentFromCloud(JSON.parse(raw) as Partial<SiteContent>);
   } catch {
     /* 忽略损坏数据 */
   }
@@ -163,7 +165,7 @@ export async function fetchPublishedContent(): Promise<SiteContent | null> {
   try {
     const res = await fetch(`${import.meta.env.BASE_URL}content.json`, { cache: 'no-cache' });
     if (!res.ok) return null;
-    return normalizeContent((await res.json()) as Partial<SiteContent>);
+    return normalizeContentFromCloud((await res.json()) as Partial<SiteContent>);
   } catch {
     return null;
   }

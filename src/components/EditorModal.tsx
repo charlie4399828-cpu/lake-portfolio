@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole, ArrowUp, ArrowDown, Download, Upload } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
 import { DEFAULT_CONTENT, type SiteContent } from '../data/content';
+import { saveCloudContent } from '../data/cloud';
 
 interface EditorModalProps {
   open: boolean;
@@ -155,6 +156,7 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
   const [authed, setAuthed] = useState(false);
   const [pwd, setPwd] = useState('');
   const [pwdError, setPwdError] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -242,9 +244,23 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
   const moveResource = (i: number, dir: -1 | 1) =>
     setDraft((d) => ({ ...d, resources: moveItem(d.resources, i, dir) }));
 
-  const save = () => {
-    update(draft);
-    onClose();
+  // 保存：本机立即生效 + 同步云端（云端成功后所有访客刷新即可见）
+  const save = async () => {
+    const stamped = { ...draft, _cmsUpdatedAt: Date.now() };
+    update(stamped);
+    setSaving(true);
+    try {
+      await saveCloudContent(stamped, pwd);
+      onClose();
+    } catch (e) {
+      const go = window.confirm(
+        `内容已保存在本机，但同步到云端失败：\n${(e as Error).message}\n\n` +
+          '点「确定」仍关闭（访客暂时看不到本次修改）；点「取消」留在编辑页重试。',
+      );
+      if (go) onClose();
+    } finally {
+      setSaving(false);
+    }
   };
 
   // 发布：把当前内容写为 content.json。
@@ -590,15 +606,17 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
               </div>
               <button
                 onClick={save}
+                disabled={saving}
+                title="保存到本机并同步云端，所有访客刷新后即可看到"
                 style={{
                   backgroundImage:
                     'linear-gradient(123deg, #18011F 7%, #B600A8 37%, #7621B0 72%, #BE4C00 100%)',
                   outline: '2px solid #FFFFFF',
                   outlineOffset: '-3px',
                 }}
-                className="inline-flex items-center gap-1.5 rounded-full px-6 py-2 text-sm font-semibold uppercase tracking-wider text-white transition-transform hover:scale-105"
+                className="inline-flex items-center gap-1.5 rounded-full px-6 py-2 text-sm font-semibold uppercase tracking-wider text-white transition-transform hover:scale-105 disabled:opacity-60"
               >
-                <Save size={15} /> 保存
+                <Save size={15} /> {saving ? '同步云端中…' : '保存并发布'}
               </button>
             </div>
             </>
