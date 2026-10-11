@@ -45,14 +45,6 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 | `src/components/FadeIn.tsx` / `AnimatedText.tsx` | 入场动画 / 逐字滚动亮起 |
 | `public/wechat-qr.svg` | 微信二维码占位图（少爷请替换为真实二维码） |
 
-## 隐藏功能
-
-- **编辑入口**：连续点击 Hero 左下角小字「LAKE © 2026 — PORTFOLIO」3 次（800ms 内）→ 弹出密码框 → 输入密码进入编辑面板。
-- **编辑密码**：`763560`（定义于 `EditorModal.tsx` 的 `EDIT_PASSWORD`）。
-- 编辑内容：联系方式 / Hero 标题与小字 / About 标题与自我介绍 / Projects 卡片（项目名、小字、详情、图片、增删卡片数量）。
-- 保存写入 localStorage 即时生效；「恢复默认」清除修改。
-- **项目详情**：点击任意项目卡片进入 `#/project/N` 详情页。
-
 ## 变更记录
 
 ### 2026-10-11（第 11 轮）
