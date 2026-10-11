@@ -1,13 +1,13 @@
 /**
- * Supabase 云端内容同步（与昌隆茶舍同一 Supabase 项目，独立表 / 独立函数）。
+ * Supabase 云端内容同步（Lake 专属独立项目 Lake_Portfolio）。
  * - 读：REST 直读 lake_content 单行（RLS 公开可读）
  * - 写：save-lake-site Edge Function，校验编辑密码后用 service role 写入
  * 本地 localStorage 只是缓存；任意访客打开网站都能拿到云端最新内容。
  */
 import { normalizeContentFromCloud, type SiteContent } from './content';
 
-const SUPABASE_URL = 'https://ghyvptwooesjvtwfljfz.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_jlEah_ycR8WruZaEhw0QRA_6oHiDTqK';
+const SUPABASE_URL = 'https://kmsiybqaxvyptxktsxhr.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_mU3GCORWbmqH7uo7Hii5kQ_cale7zin';
 const SAVE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/save-lake-site`;
 
 function authHeaders(): HeadersInit {

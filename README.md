@@ -52,14 +52,14 @@ LakeSection（全屏 Hero）→ MarqueeSection（21 图双行滚动）→ AboutS
 
 ## 变更记录
 
-### 2026-10-11（第 14 轮 · Supabase 云端内容，对齐昌隆方案）
-1. 方案对齐 `D:\Code\ChangLong-web`：Supabase 云端存全站 JSON，密码保护的 Edge Function 写入，**任意访客自动加载云端最新内容**，localStorage 仅作缓存。复用同一 Supabase 项目 `ghyvptwooesjvtwfljfz`，独立表 `lake_content` + 独立函数 `save-lake-site`，与昌隆互不影响。
-2. 新增 [src/data/cloud.ts](src/data/cloud.ts)：REST 公开读（apikey sb_publishable_…）+ POST 云函数保存（密码 763560，由函数端校验）。
-3. ContentContext 加载策略：云端内容 vs 本机草稿按 `_cmsUpdatedAt` 取新；云端不可用 → 静态 `content.json` → 代码默认。
-4. 编辑弹窗主按钮改为「**保存并发布**」：本机立即生效 + 同步云端（同步中状态/失败可重试），成功后所有访客刷新即见，无需部署。
-5. Supabase 资源：`supabase/schema-lake.sql` 建表脚本；`supabase/functions/save-lake-site/` 函数源码（Deno）。
-6. 待办（依赖少爷）：目标 Supabase 项目当前 **INACTIVE（被暂停）**，需在 Dashboard 点 Restore 恢复；恢复后部署函数并在 SQL Editor 执行建表脚本。
-7. tsc + 10 单测通过。
+### 2026-10-11（第 14 轮 · Supabase 云端内容，独立数据库）
+1. 方案对齐 `D:\Code\ChangLong-web`：Supabase 云端存全站 JSON，密码保护的 Edge Function 写入，**任意访客自动加载云端最新内容**，localStorage 仅作缓存。
+2. **新建 Lake 专属独立 Supabase 项目** `Lake_Portfolio`（ref `kmsiybqaxvyptxktsxhr`，新加坡），与昌隆物理隔离；经少爷确认删除了已暂停的旧项目腾出免费名额。数据库密码存于本机 `.env.local`（gitignore）。
+3. 新增 [src/data/cloud.ts](src/data/cloud.ts)：REST 公开读（sb_publishable key）+ POST 云函数保存（密码 763560，函数端校验）。
+4. ContentContext 加载策略：云端内容 vs 本机草稿按 `_cmsUpdatedAt` 取新；云端不可用 → 静态 `content.json` → 代码默认。
+5. 编辑弹窗主按钮「**保存并发布**」：本机立即生效 + 同步云端，成功后所有访客刷新即见，无需部署。
+6. Supabase 资源：`supabase/schema-lake.sql` 建表脚本（已执行）；`supabase/functions/save-lake-site/` 函数（已部署，secret SITE_EDIT_PASSWORD 已设置）。
+7. 实测全通过：错误密码 401 / 正确密码 200 / REST 读回；浏览器访客清缓存后自动拉云端（4 项目/1 资源/63 滚动图，无 CORS 报错）；浏览器端真实 POST 写入并读回。
 
 ### 2026-10-11（第 13 轮 · 一键发布修复）
 1. 问题：第 12 轮的「发布内容」在浏览器里只能**下载** content.json 到下载目录，不会写回项目，导致 `npm run deploy` 部署的仍是旧文件，访客看不到修改。
