@@ -1,0 +1,111 @@
+{
+  "contact": {
+    "email": "hello@lake.studio",
+    "phone": "+86 138-0000-0000",
+    "wechat": "lake-studio",
+    "qr": "/wechat-qr.svg"
+  },
+  "hero": {
+    "title": "莱克的小屋",
+    "tagline": "Lake © 2026 — Portfolio",
+    "portrait": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cinematic%20studio%20portrait%20of%20a%20young%20creative%20developer%20wearing%20a%20dark%20hoodie%2C%20dramatic%20purple%20and%20magenta%20rim%20lighting%2C%20dark%20background%2C%20moody&image_size=portrait_4_3"
+  },
+  "about": {
+    "title": "About me",
+    "text": "这里放你的自我介绍啊喂"
+  },
+  "marquee": [
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20moody%20mountain%20lake%20at%20night%20with%20fog%2C%20cinematic%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20dark%203D%20fluid%20render%20with%20purple%20and%20magenta%20neon%20glow&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cyberpunk%20alley%20at%20night%2C%20rain%2C%20neon%20reflections%2C%20dark%20tones&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=misty%20pine%20forest%20at%20dusk%2C%20dark%20cinematic%20landscape&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20dark%20glass%20sculpture%20with%20teal%20rim%20light%2C%20studio%203D%20render&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=starry%20night%20sky%20reflected%20on%20a%20calm%20dark%20lake%2C%20long%20exposure&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20brutalist%20concrete%20architecture%20in%20fog%2C%20moody%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=liquid%20metal%20waves%20on%20black%20background%2C%20blue%20highlights%2C%203D%20render&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=lighthouse%20at%20night%20in%20a%20storm%2C%20dark%20cinematic%20seascape&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=macro%20shot%20of%20dark%20water%20ripples%2C%20deep%20blue%20and%20black&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=aurora%20borealis%20over%20a%20dark%20lake%2C%20night%20landscape%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=purple%20smoke%20on%20black%20background%2C%20dramatic%20studio%20lighting&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20cabin%20by%20a%20lake%20at%20night%2C%20warm%20window%20light%2C%20dark%20forest&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20minimal%20topographic%20lines%20artwork%2C%20subtle%20grey%20gradient&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=full%20moon%20over%20a%20calm%20dark%20ocean%2C%20minimal%20cinematic%20photography&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=floating%20geometric%20shapes%2C%20magenta%20and%20cyan%20neon%20on%20dark%20background%2C%203D%20render&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=rowboat%20on%20a%20still%20dark%20lake%20at%20dawn%2C%20mist%2C%20cinematic&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=silver%20smoke%20trails%20on%20black%20background%2C%20high%20contrast%20abstract&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=night%20waterfall%20long%20exposure%20among%20dark%20rocks%2C%20cinematic&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20ceramic%20vase%20still%20life%20with%20dramatic%20side%20light%2C%20minimal&image_size=landscape_4_3",
+    "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=storm%20clouds%20over%20a%20dark%20lake%20horizon%2C%20moody%20landscape%20photography&image_size=landscape_4_3"
+  ],
+  "projects": [
+    {
+      "name": "湖畔博客",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=developer%20workspace%20at%20night%20by%20a%20window%2C%20dark%20room%2C%20screen%20glow%2C%20cinematic&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20desk%20setup%20with%20laptop%20showing%20a%20blog%2C%20purple%20ambient%20light%2C%20moody&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=coffee%20cup%20and%20notebook%20on%20dark%20wooden%20desk%2C%20moody%20cinematic%20light&image_size=landscape_4_3"
+      ],
+      "desc": "记录湖畔的灵感与日常，一个安静的写作角落。",
+      "detail": "湖畔博客 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
+      "tags": [
+        "React",
+        "TypeScript",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "name": "涟漪仪表盘",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20dark%20office%20desk%20with%20a%20wide%20monitor%20showing%20a%20dashboard%2C%20night&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20analytics%20dashboard%20UI%20on%20a%20monitor%2C%20purple%20accents%2C%20modern&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=close-up%20of%20dark%20UI%20charts%20and%20graphs%20glowing%20on%20a%20screen&image_size=landscape_4_3"
+      ],
+      "desc": "涟漪仪表盘 项目简介。",
+      "detail": "涟漪仪表盘 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
+      "tags": [
+        "React",
+        "TypeScript",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "name": "深水摄影",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20underwater%20cave%20with%20faint%20blue%20light%20rays%2C%20cinematic&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=underwater%20dark%20blue%20scene%20with%20light%20rays%20from%20the%20surface&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=silhouette%20of%20a%20diver%20in%20deep%20dark%20water%2C%20cinematic&image_size=landscape_4_3"
+      ],
+      "desc": "深水摄影 项目简介。",
+      "detail": "深水摄影 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
+      "tags": [
+        "React",
+        "TypeScript",
+        "TailwindCSS"
+      ]
+    },
+    {
+      "name": "湖屋商店",
+      "images": [
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=wooden%20shelf%20with%20handmade%20goods%20in%20a%20dark%20cozy%20store%2C%20warm%20light&image_size=portrait_16_9",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=dark%20minimal%20product%20shot%20of%20a%20ceramic%20mug%2C%20purple%20backlight&image_size=landscape_4_3",
+        "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cozy%20dark%20interior%20of%20a%20lakeside%20cabin%20shop%2C%20warm%20lamps&image_size=landscape_4_3"
+      ],
+      "desc": "湖屋商店 项目简介。",
+      "detail": "湖屋商店 的详细项目内容。\n\n在这里补充项目背景、目标、你的角色、用到的技术栈、遇到的挑战与最终的成果。\n\n支持多段文字。",
+      "tags": [
+        "React",
+        "TypeScript",
+        "TailwindCSS"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "name": "前端开发",
+      "category": "技能",
+      "desc": "React / Vue / TypeScript，从设计稿到上线全流程。",
+      "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20web%20development%20workspace%2C%20laptop%20with%20glowing%20code%20editor%2C%20dark%20ambient%20room%2C%20blue%20and%20purple%20neon%20accents%2C%20cinematic%20lighting%2C%20photorealistic&image_size=landscape_4_3",
+      "link": "https://github.com"
+    }
+  ]
+}
