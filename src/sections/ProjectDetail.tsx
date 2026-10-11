@@ -48,7 +48,7 @@ export default function ProjectDetail({ project, index, onBack }: ProjectDetailP
       {/* 主图（第 1 张） */}
       {project.images.length > 0 && (
         <div className="mt-8 overflow-hidden rounded-3xl border-2 border-[#D7E2EA]/40">
-          <img src={project.images[0]} alt={`${project.name} 主图`} className="h-[50vh] w-full object-cover md:h-[60vh]" />
+          <img src={project.images[0]} alt={`${project.name} 主图`} data-zoomable className="h-[50vh] w-full cursor-zoom-in object-cover md:h-[60vh]" />
         </div>
       )}
 
@@ -65,7 +65,7 @@ export default function ProjectDetail({ project, index, onBack }: ProjectDetailP
       {project.images.length > 1 && (
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {project.images.slice(1).map((src, k) => (
-            <img key={k} src={src} alt={`细节 ${k + 1}`} className="h-56 w-full rounded-2xl object-cover md:h-72" />
+            <img key={k} src={src} alt={`细节 ${k + 1}`} data-zoomable className="h-56 w-full cursor-zoom-in rounded-2xl object-cover md:h-72" />
           ))}
         </div>
       )}

@@ -52,7 +52,8 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
                 src={project.images[0]}
                 alt={`${project.name} 图 1`}
                 loading="lazy"
-                className="h-full w-full rounded-2xl object-cover"
+                data-zoomable
+                className="h-full w-full cursor-zoom-in rounded-2xl object-cover"
               />
             ) : project.images.length === 2 ? (
               <>
@@ -62,7 +63,8 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
                     src={project.images[1]}
                     alt={`${project.name} 图 2`}
                     loading="lazy"
-                    className="h-full w-full rounded-2xl object-cover"
+                    data-zoomable
+                    className="h-full w-full cursor-zoom-in rounded-2xl object-cover"
                   />
                 </div>
                 {/* 大图 60%（images[0]） */}
@@ -71,7 +73,8 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
                     src={project.images[0]}
                     alt={`${project.name} 图 1`}
                     loading="lazy"
-                    className="h-full w-full rounded-2xl object-cover"
+                    data-zoomable
+                    className="h-full w-full cursor-zoom-in rounded-2xl object-cover"
                   />
                 </div>
               </>
@@ -88,7 +91,8 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
                       src={src}
                       alt={`${project.name} 图 ${k + 2}`}
                       loading="lazy"
-                      className="h-full w-full rounded-2xl object-cover"
+                      data-zoomable
+                      className="h-full w-full cursor-zoom-in rounded-2xl object-cover"
                     />
                   ))}
                 </div>
@@ -97,7 +101,8 @@ function ProjectCard({ index, total, progress, project, onOpen }: ProjectCardPro
                     src={project.images[0]}
                     alt={`${project.name} 主图`}
                     loading="lazy"
-                    className="h-full w-full rounded-2xl object-cover"
+                    data-zoomable
+                    className="h-full w-full cursor-zoom-in rounded-2xl object-cover"
                   />
                 </div>
               </>

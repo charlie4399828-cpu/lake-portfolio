@@ -7,6 +7,7 @@ import ResourcesSection from './sections/ResourcesSection';
 import ProjectDetail from './sections/ProjectDetail';
 import Starfield from './components/Starfield';
 import BackToTop from './components/BackToTop';
+import Lightbox from './components/Lightbox';
 import { ContentProvider, useContent } from './context/ContentContext';
 
 function parseRoute(): number | null {
@@ -51,6 +52,7 @@ function Home() {
         </main>
       )}
       <BackToTop />
+      <Lightbox />
     </>
   );
 }

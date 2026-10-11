@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole, ArrowUp, ArrowDown } from 'lucide-react';
+import { X, Plus, Trash2, RotateCcw, Save, LockKeyhole, ArrowUp, ArrowDown, Download, Upload } from 'lucide-react';
 import { useContent } from '../context/ContentContext';
-import type { SiteContent } from '../data/content';
+import { DEFAULT_CONTENT, type SiteContent } from '../data/content';
 
 interface EditorModalProps {
   open: boolean;
@@ -14,22 +14,49 @@ const inputCls =
   'w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder-white/30 outline-none focus:border-[#B600A8]';
 const labelCls = 'mb-1 block text-xs uppercase tracking-wider text-white/50';
 
+/** 图片缩略图预览（加载失败显示占位） */
+function Thumb({ src }: { src: string }) {
+  const [err, setErr] = useState(false);
+  if (!src || err) {
+    return (
+      <span className="flex h-9 w-14 shrink-0 items-center justify-center rounded-md border border-dashed border-white/15 text-[10px] text-white/30">
+        无图
+      </span>
+    );
+  }
+  return (
+    <img
+      src={src}
+      alt=""
+      onError={() => setErr(true)}
+      className="h-9 w-14 shrink-0 rounded-md border border-white/15 object-cover"
+    />
+  );
+}
+
 function Field({
   label,
   value,
   onChange,
   textarea,
+  preview,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   textarea?: boolean;
+  preview?: boolean;
 }) {
   return (
     <div>
       <label className={labelCls}>{label}</label>
       {textarea ? (
         <textarea rows={3} className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} />
+      ) : preview ? (
+        <div className="flex items-center gap-2">
+          <Thumb key={value} src={value} />
+          <input className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} />
+        </div>
       ) : (
         <input className={inputCls} value={value} onChange={(e) => onChange(e.target.value)} />
       )}
@@ -99,6 +126,7 @@ function ImageListEditor({
         {images.map((src, k) => (
           <div key={k} className="flex items-center gap-1.5">
             <span className="w-8 shrink-0 text-center text-xs text-white/40">{labelFor(k)}</span>
+            <Thumb key={src} src={src} />
             <input
               className={inputCls}
               value={src}
@@ -219,6 +247,32 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
     onClose();
   };
 
+  // 导出 / 导入配置 JSON（跨浏览器迁移内容）
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const exportJson = () => {
+    const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'lake-content.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importJson = (f: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result));
+        setDraft({ ...DEFAULT_CONTENT, ...parsed });
+      } catch {
+        alert('导入失败：文件不是有效的 JSON');
+      }
+    };
+    reader.readAsText(f);
+  };
+
   return createPortal(
     <AnimatePresence>
       {open && (
@@ -286,7 +340,7 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                   <Field label="邮箱" value={draft.contact.email} onChange={(v) => set('contact', { ...draft.contact, email: v })} />
                   <Field label="电话" value={draft.contact.phone} onChange={(v) => set('contact', { ...draft.contact, phone: v })} />
                   <Field label="微信号" value={draft.contact.wechat} onChange={(v) => set('contact', { ...draft.contact, wechat: v })} />
-                  <Field label="二维码路径" value={draft.contact.qr} onChange={(v) => set('contact', { ...draft.contact, qr: v })} />
+                  <Field label="二维码路径" preview value={draft.contact.qr} onChange={(v) => set('contact', { ...draft.contact, qr: v })} />
                 </div>
               </section>
 
@@ -297,7 +351,7 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                   <Field label="大标题" value={draft.hero.title} onChange={(v) => set('hero', { ...draft.hero, title: v })} />
                   <Field label="左下角小字" value={draft.hero.tagline} onChange={(v) => set('hero', { ...draft.hero, tagline: v })} />
                   <div className="sm:col-span-2">
-                    <Field label="人像图片" value={draft.hero.portrait} onChange={(v) => set('hero', { ...draft.hero, portrait: v })} />
+                    <Field label="人像图片" preview value={draft.hero.portrait} onChange={(v) => set('hero', { ...draft.hero, portrait: v })} />
                   </div>
                 </div>
               </section>
@@ -436,7 +490,7 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
                         <div className="sm:col-span-2">
                           <Field label="一句话简介" value={r.desc} onChange={(v) => setResource(i, { desc: v })} />
                         </div>
-                        <Field label="配图路径" value={r.image} onChange={(v) => setResource(i, { image: v })} />
+                        <Field label="配图路径" preview value={r.image} onChange={(v) => setResource(i, { image: v })} />
                         <Field label="跳转链接" value={r.link} onChange={(v) => setResource(i, { link: v })} />
                       </div>
                     </div>
@@ -445,13 +499,39 @@ export default function EditorModal({ open, onClose }: EditorModalProps) {
               </section>
             </div>
 
-            <div className="flex shrink-0 items-center justify-between gap-3 border-t border-white/10 px-6 py-4">
-              <button
-                onClick={() => { reset(); onClose(); }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
-              >
-                <RotateCcw size={15} /> 恢复默认
-              </button>
+            <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-white/10 px-6 py-4">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { reset(); onClose(); }}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
+                >
+                  <RotateCcw size={15} /> 恢复默认
+                </button>
+                {/* 导出/导入配置：解决换浏览器 localStorage 为空的问题 */}
+                <button
+                  onClick={exportJson}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
+                >
+                  <Download size={15} /> 导出
+                </button>
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-4 py-2 text-sm text-white/70 hover:bg-white/10"
+                >
+                  <Upload size={15} /> 导入
+                </button>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="application/json"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) importJson(f);
+                    e.target.value = '';
+                  }}
+                />
+              </div>
               <button
                 onClick={save}
                 style={{

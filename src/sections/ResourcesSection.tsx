@@ -18,7 +18,8 @@ function ResourceCard({ item, index }: { item: ResourceItem; index: number }) {
             src={item.image}
             alt={item.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            data-zoomable
+            className="h-full w-full cursor-zoom-in object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {/* 分类标签胶囊：渐变描边 */}
           <span

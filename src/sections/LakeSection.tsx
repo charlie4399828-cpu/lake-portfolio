@@ -76,7 +76,8 @@ export default function LakeSection() {
             src={content.hero.portrait}
             alt="Lake 人像"
             loading="lazy"
-            className="h-32 w-24 rounded-2xl object-cover sm:h-44 sm:w-32 md:h-56 md:w-40 lg:h-64 lg:w-48"
+            data-zoomable
+            className="h-32 w-24 cursor-zoom-in rounded-2xl object-cover sm:h-44 sm:w-32 md:h-56 md:w-40 lg:h-64 lg:w-48"
           />
         </FadeIn>
       </div>
